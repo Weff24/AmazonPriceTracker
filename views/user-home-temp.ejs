@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/user-home.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+    <title>Price Tracker</title>
+</head>
+<body>
+    <nav id="navbar">
+        <a id="logo" href="add something here">Price Tracker</a>
+        <div id="nav-mid">
+            <form id="search-form" action="add something here">
+                <input id="item-search" name="item-search" type="search"  placeholder="Search Item">
+            </form>
+        </div>
+        <div id="nav-right">
+            <ul>
+                <li><a id="amazon-link" class="plain-link" href="https://www.amazon.com/" target="_blank">Amazon</a></li>
+                <li>User</li>
+            </ul>
+        </div>
+    </nav>
+    <main class="main">
+        <section id="page-intro">
+            <p id="welcome">Welcome, (User's Name)!</p>
+            <p id="page-description">Items List</p>
+        </section>
+        <section id="add-item">
+            <form id="add-item-form">
+                <button id="add-item-button" type="button">+ Add Item</button>
+                <!--<input id="add-item-button" type="button" value="Add Item">-->
+            </form>
+            </script>
+        </section>
+        <section id="add-item-url">
+            <div>
+                <p id="add-item-text">Add Item</p>
+                <div id="add-item-close" class="close-button"></div>
+            </div>
+            <form id="add-item-url-form" action="/add-item-url" method="POST">
+                <input id="enter-item-url" type="url" name="url" placeholder="Enter URL" required>
+                <button id="submit-item-url" type="submit">Submit</button>
+            </form>
+        </section>
+
+        <%- include('item-list', {allData: allData}) %>
+
+        <div id="bg-blur">hi</div>
+        <div id="load-animation">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <p class="load-text">Adding</p>
+        </div>
+    </main>
+    <script type="text/javascript" src="/js/user-home.js"></script>
+</body>
+
+</html>
