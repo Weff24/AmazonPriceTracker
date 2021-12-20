@@ -19,7 +19,8 @@
             </div>
             <div id="remove-item" class="remove-item">
                 <form class="remove-item-form" action="/remove-item" method="POST">
-                    <button class="remove-item-button" type="submit" name="num" value="<%= i %>">x remove</button>
+                    <button class="remove-item-button" type="submit" name="id" value="<%= allData[i]._id %>">x remove</button>
+                    <input type="hidden" name="username" value="<%= name %>">
                 </form>
             </div>
         </div>

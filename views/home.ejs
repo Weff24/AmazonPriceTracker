@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home.css">
+    <title>Price Tracker</title>
+</head>
+<body>
+    <nav id="navbar">
+        <a id="logo" href="add something here">Price Tracker</a>
+        <div id="nav-mid">
+            <form id="search-form" action="/goto-user" method="POST">
+                <input id="enter-user" type="text" name="username" placeholder="Enter Username" required>
+                <button id="submit-user" type="submit">Search</button>
+            </form>
+        </div>
+        <div id="nav-right">
+            <ul>
+                <li><a id="amazon-link" class="plain-link" href="https://www.amazon.com/" target="_blank">Amazon</a></li>
+            </ul>
+        </div>
+    </nav>
+    <main class="main">
+        <section id="page-intro">
+            <p id="welcome">Welcome to Amazon Price Tracker!</p>
+            <p id="page-description">With Amazon Price Tracker, you can easily monitor the price of items you've had your eyes on. You can also look at each item's price trends to determine when it's the best time to buy.</p>
+        </section>
+        
+        <section id="new-user">
+            <form id="new-user-form" action="/goto-user" method="POST">
+                <p id="new-user-text">Create price tracker user page</p>
+                <input id="enter-new-user" type="text" name="username" placeholder="Enter Username" required>
+                <button id="submit-new-user" type="submit">Create</button>
+            </form>
+        </section>
+
+        <div id="bg-blur">hi</div>
+        <div id="load-animation">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <p class="load-text">Adding</p>
+        </div>
+    </main>
+    <script type="text/javascript" src="/js/home.js"></script>
+</body>
+
+</html>
