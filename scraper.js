@@ -12,7 +12,7 @@ async function getData(url) {
     await page.goto(url, {waitUntil: "domcontentloaded"});
 //    let price = await page.evaluate((element) => element.innerText, await page.$$('#price_inside_buybox'));
 //    let price = await page.$eval('#newBuyBoxPrice', element => element.innerText);
-    let price = await page.$eval('.a-offscreen', element => element.innerText);
+    let priceString = await page.$eval('.a-offscreen', element => element.innerText);
     let name = await page.$eval('#productTitle', element => element.innerText);
 /*    let price;
     try {
@@ -26,14 +26,17 @@ async function getData(url) {
     }*/
     await browser.close();
     
-    let timestamp = Date.now()
-    let dateObject = new Date(timestamp);
-    let date = dateObject.getDate();
-    let month = dateObject.getMonth();
+    let timestamp = Date.now();
+/*    let dateObject = new Date(timestamp);
+    let day = dateObject.getDate();
+    let month = dateObject.getMonth() + 1;
     let hour = dateObject.getHours();
-    let time = month + '/' + date + ' @ ' + hour + ':00';
+    let mins = dateObject.getMinutes();
+    let time = month + '/' + day + ' @ ' + hour + ':' + mins; */
 
-    return { price: price, name: name, url: url , addTime: time};
+    let price = parseFloat(priceString.substring(1));
+
+    return { price: price, name: name, url: url , time: timestamp};
 }
 //    let try1 = await page.$eval('#price_inside_buybox', element => element.innerText)
 //    let try2 = await page.$eval('#newBuyBoxPrice', element => element.innerText);

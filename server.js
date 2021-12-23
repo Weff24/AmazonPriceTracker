@@ -81,7 +81,9 @@ app.post('/add-item-url', (req, res) => {
             data.maxPrice = data.price;
             data.minPrice = data.price;
 
-            data.previousPrices = [ [data.addTime, data.price] ];
+            data.prices = [data.price];
+            data.times = [data.time];
+//            data.prices = [{ x: data.time, y: data.price }]
 
 //            allData.push(data);
             let objId;
@@ -89,20 +91,44 @@ app.post('/add-item-url', (req, res) => {
             mongoClient.connect(uri, (err, client) => {
                 if (err) throw err;
                 let db = client.db('users');
+                console.log(db.collection(username).countDocuments({}));////////////////////////////////////////////////////
                 db.collection(username).insertOne(data, (err, result) => {
                     if (err) throw err;
                     objId = result.insertedId;
                     client.close();
                 });
             });
-            setInterval(() => {
-                updateCurrentPrice(req.body.url, objId, username);
-            }, 3600000);
+
+            // Update price every ................................................. hours
+            let intervalId = setInterval(() => {
+                mongoClient.connect(uri, (err, client) => {
+                    if (err) throw err;
+                    let db = client.db('users');
+                    if (db.collection(username).countDocuments({}) == 0) {
+                        clearInterval(intervalId);
+                    } else {
+                        updateCurrentPrice(req.body.url, objId, username);
+                    }
+                });
+                
+            }, 10000/*3600000*/);
+/*
+            mongoClient.connect(uri, (err, client) => {
+                if (err) throw err;
+                let db = client.db('users');
+                db.collection(username + '_update_timers').insertOne({ '_id': objId, 'intervalId': parseFloat(intervalId) },
+                                                                     (err, result) => {
+                    if (err) throw err;
+                    client.close();
+                });
+            });*/
+
             res.redirect('/user/' + username);
         });
 });
 
 
+// Updates the price data for a tracked item
 const updateCurrentPrice = function(url, objId, username) {
     scraper.getData(url)
         .then((data) => {
@@ -111,7 +137,8 @@ const updateCurrentPrice = function(url, objId, username) {
                 if (err) throw err;
                 let db = client.db('users');
                 db.collection(username).updateOne({ '_id': objId }, 
-                                                  { $push: { 'previousPrices': [data.addTime, data.price] }, 
+                                                  { $push: { 'prices': data.price, 'times': data.time }, 
+//                                                  { $push: { 'prices': { y: data.time, x: data.price } }, 
                                                     $max: { 'maxPrice': data.price }, 
                                                     $min: { 'minPrice': data.price } }, 
                                                   (err, result) => {
@@ -134,6 +161,7 @@ app.post('/remove-item', (req, res) => {
     mongoClient.connect(uri, (err, client) => {
         if (err) throw err;
         let db = client.db('users');
+        clearInterval(req.body.id);
         db.collection(username).deleteOne( {'_id': objectId(req.body.id) }, (err, result) => {
             if (err) throw err;
             client.close();

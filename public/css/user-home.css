@@ -4,6 +4,12 @@ html, body {
     margin: 0px;
 }
 
+canvas {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 auto;
+}
+
 nav {
     background-color: #fff;
     position: fixed;
@@ -303,13 +309,13 @@ nav {
     margin: 0px 10px;
 }
 
-@media (max-width: 1100px) and (min-width: 600px) {
+@media (max-width: 1100px) and (min-width: 800px) {
     .item {
         grid-template-columns: 1fr 200px;
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
     .item {
         grid-template-columns: 1fr;
     }

@@ -7,22 +7,30 @@
                     <a class="plain-link" href="<%= data.url %>" target="_blank"><%= data.name %></a>
                 </p>
             </div>
+
             <div id="price-chart" class="price-chart">
-                <canvas id="chart<%= allData.length - i - 1 %>" width="50" height="20"></canvas>
+                <!-- <canvas id="chart" data-prices="<%= data.prices %>"></canvas>  -->
+                <canvas id="chart<%= allData.length - i - 1 %>" data-times="<%= data.times %>" data-prices="<%= data.prices %>"></canvas>
+                <!-- <canvas id="chart<%= allData.length - i - 1 %>" width="50" height="20"></canvas> -->
             </div>
+
             <div id="current-price" class="current-price">
                 <p class="item-text">Current Price: <span> <%= data.price %></span></p>
             </div>
+
             <div id="more-info" class="more-info">
                 <p class="item-text">Min Price: <span> <%= data.minPrice %></span></p>
                 <p class="item-text">Max Price: <span> <%= data.maxPrice %></span></p>
             </div>
+
             <div id="remove-item" class="remove-item">
                 <form class="remove-item-form" action="/remove-item" method="POST">
-                    <button class="remove-item-button" type="submit" name="id" value="<%= allData[i]._id %>">x remove</button>
+                    <button class="remove-item-button" type="submit" name="id" value="<%= data._id %>">x remove</button>
                     <input type="hidden" name="username" value="<%= name %>">
                 </form>
             </div>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
         </div>
     <% } %>
 </section>
