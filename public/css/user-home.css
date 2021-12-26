@@ -11,25 +11,28 @@ canvas {
 }
 
 nav {
-    background-color: #fff;
+    background-color: #111;
     position: fixed;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 50px;
+    height: 70px;
     padding: 0px 30px;
     box-sizing: border-box;
-    border-bottom: 1px solid #b8b8b8;
-    box-shadow: 0px 1px 2px #cbcbcb;
+    border-bottom: 1px solid #555;
+    box-shadow: 0px 2px 2px #555;
+}
+
+#logo-container {
+    width: 25%;
 }
 
 #logo {
-    width: 25%;
-    font-weight: bold;
-    font-size: 28px;
-    color: #000;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 32px;
+    color: #fff;
     text-decoration: none;
 }
 
@@ -46,13 +49,39 @@ nav {
     height: 100%;
 }
 
-#item-search {
-    width: 100%;
-    height: 60%;
-    max-width: 600px;
-    min-width: 150px;
-    border: 2px solid #000;
-    border-radius: 4px;
+#enter-user, #enter-item-url {
+    font-size: 14px;
+    width: 89%;
+    height: 31px;
+    border: 1px solid #bbb;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    padding: 0px 10px;
+}
+
+#submit-user {
+    font-size: 14px;
+    height: 33px;
+    width: 60px;
+    color: #fff;
+    background-color: #111;
+    border: 2px solid #fff;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin-left: -2px;
+}
+
+#submit-user span {
+    font-size: 20px;
+}
+
+#submit-user:hover {
+    color: #111;
+    background-color: #fff;
+}
+
+#enter-user:focus ~ #submit-user {
+    border: 3px solid #fff;
 }
 
 #nav-right {
@@ -64,15 +93,43 @@ nav {
 }
 
 #nav-right ul li {
+    font-size: 18px;
     display: inline-block;
     margin: 0px 10px;
 }
 
-/*
-#nav-right ul li:hover{
-    text-decoration: underline;
+#username {
+    color: #30bd3c;
 }
-*/
+
+#amazon-link {
+    color: #fff;
+    text-decoration: none;
+}
+
+.hover-underline-animation {
+    display: inline-block;
+    position: relative;
+    color: #fff;
+}
+  
+.hover-underline-animation:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+}
+  
+.hover-underline-animation:hover:after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
 
 .plain-link {
     color: #000;
@@ -80,21 +137,24 @@ nav {
 }
 
 .plain-link:hover {
-    color: #66ccff;
+    color: rgba(220, 99, 132);
 }
 
 .main {
-    background-color: #fcfcfd;
-    padding-top: 50px;
+    background-color: #efefef;
+    padding: 50px 0;
+    height: 100%;
+    min-height: 100vh;
 }
 
 .main #page-intro {
+    padding-top: 25px;
     padding-left: 27%;
     padding-right: 27%;
 }
 
 .main #page-intro p {
-    margin-top: 20px;
+    margin-top: 15px;
     margin-bottom: 0px;
 }
 
@@ -112,55 +172,84 @@ nav {
     padding-bottom: 5px;
 }
 
-/*
-.main #add-item #add-item-form {
-    text-align: center;
+#error-message {
+    font-size: 16px;
+    color: #c00;
+    text-align: right;
+    margin: 15px auto -10px auto;
 }
 
-#add-item-button {
-    background-color: inherit;
-    font-size: 10px;
-    width: 50%;
-    height: 30px;
-    border: 1px dashed #4dc3ff;
-    border-radius: 6px;
-    transform: scale(2);
+#empty-cart-container {
+    background-color: #fff;
+    height: 60%;
+    min-height: 400px;
+    margin: 25px 20% 0 20%;
+    padding: 25px 25px 10px 25px;
+    border: 1px solid rgba(220, 220, 220, 0.25);
+    border-radius: 30px;
+    box-shadow: -2px -2px 10px rgba(255, 255, 255, 0.35),
+                10px 12px 20px rgba(125, 141, 160, 0.64);
 }
-*/
+
+#empty-cart-img {
+    display: block;
+    width: 40%;
+    min-width: 200px;
+    margin: auto;
+}
+
+#empty-cart-text {
+    font-size: 26px;
+    font-weight: bold;
+    color: rgba(27, 96, 199, 0.75);
+    text-align: center;
+    margin: 10px;
+}
 
 .main #add-item #add-item-form {
     text-align: right;
 }
 
 #add-item-button {
-    background-color: #66ccff;
+    background-color: #fff;
     font-size: 16px;
-    width: 120px;
-    height: 34px;
-    border: 2px solid #000;
-    border-radius: 17px;
+    width: 130px;
+    height: 40px;
+    border: 0;
+    border-radius: 20px;
+    box-shadow: -3px -3px 16px rgba(255, 255, 255, 0.35),
+                8px 8px 16px rgba(125, 141, 160, 0.64);
+    transition: 0.14s;
 }
 
 #add-item-button:hover {
-    background-color: #f5f5f5;
+    opacity: 1;
+    transform: scale(1.1);
+    mix-blend-mode: normal;
+    box-shadow: -1px -1px 12px rgba(255, 255, 255, 0.32),
+                4px 4px 12px rgba(125, 141, 168, 0.93),
+                inset -1px -1px 14px rgba(255, 255, 255, 0.64),
+                inset 6px 6px 14px rgba(220, 225, 240, 0.86);
 }
 
 #add-item-url {
-    display: none; /* display: block | when #add-item-button is clicked*/
+    display: none; /* display: block | when #add-item-button is clicked */
     position: fixed;
     width: 50%;
     height: 75px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: inherit;
-    border: 2px solid #000;
-    border-radius: 20px;
+    background-color: #fdfdfd;
+    border: 1px solid #ccc;
+    border-radius: 25px;
     padding: 5px 20px;
     z-index: 1000;
+    box-shadow: -1px -1px 8px rgba(255, 255, 255, 0.28),
+                6px 6px 12px rgba(187, 188, 190, 0.44);
 }
 
 #add-item-text {
-    margin: 7px 6px;
+    margin: 7px 2%;
 }
 
 .close-button {
@@ -169,7 +258,7 @@ nav {
     right: 15px;
     width: 20px;
     height: 20px;
-    opacity: 0.6;
+    opacity: 0.3;
 }
 
 .close-button:hover {
@@ -183,7 +272,7 @@ nav {
     left: 0px;
     width: 2px;
     height: 18px;
-    background-color: #777;
+    background-color: #c22;
 }
 
 .close-button::before {
@@ -196,24 +285,22 @@ nav {
 
 #add-item-url-form {
     display: flex;
-}
-
-#enter-item-url {
-    font-size: 14px;
-    width: 89%;
-    height: 31px;
-    border: 1px solid #bbb;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    padding: 0px 10px;
+    justify-content: center;
 }
 
 #submit-item-url {
+    font-size: 14px;
     height: 33px;
+    width: 60px;
+    background-color: #fdfdfd;
     border: 1px solid #bbb;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
     margin-left: -2px;
+}
+
+#submit-item-url:hover {
+    background-color: rgba(69, 212, 255, 0.75);
 }
 
 #enter-item-url:focus ~ #submit-item-url {
@@ -221,16 +308,19 @@ nav {
 }
 
 .item {
+    background-color: #fdfdfd;
     display: grid;
     grid-template-columns: 5fr 2fr;
     grid-template-rows: auto repeat(3, 1fr) auto;
     gap: 10px 15px;
     align-items: center;
-    height: 200px;
-    margin: 10px 20%;
-    padding: 15px 15px 5px 15px;
-    border: 1px solid #000;
+    height: 220px;
+    margin: 25px 20%;
+    padding: 25px 25px 10px 25px;
+    border: 1px solid rgba(220, 220, 220, 0.25);
     border-radius: 30px;
+    box-shadow: -2px -2px 10px rgba(255, 255, 255, 0.35),
+                10px 12px 20px rgba(125, 141, 160, 0.64);
 }
 
 .item-text span {
@@ -238,40 +328,48 @@ nav {
 }
 
 .item-name {
-    background-color: #ddd;
     grid-column: 1 / 3;
     grid-row: 1;
     width: 98%;
     height: 100%;
-    padding: 3px 2px;
-    border-radius: 5px;
+    border: 2px solid rgba(225, 225, 225, 0.45);
+    padding: 3px 2% 3px 2px;
+    border-radius: 15px;
+    box-shadow: inset -10px -10px 23px rgba(255, 255, 255, 0.35),
+                inset 10px 12px 23px rgba(225, 225, 225, 0.35);
 }
 
 .price-chart {
-    background-color: #ddd;
     grid-column: 1;
     grid-row: 2 / 5;
     width: 100%;
     height: 100%;
+    border: 2px solid rgba(225, 225, 225, 0.45);
     border-radius: 10px;
+    box-shadow: inset -10px 10px 23px rgba(255, 255, 255, 0.35),
+                inset 10px -12px 23px rgba(225, 225, 225, 0.35);
 }
 
 .current-price {
-    background-color: #ddd;
     grid-column: 2;
     grid-row: 2;
     width: 100%;
     height: 100%;
+    border: 2px solid rgba(220, 99, 132, 0.3);
     border-radius: 10px;
+    box-shadow: inset 2px 0 10px rgba(225, 225, 225, 0.3),
+                inset -2px 0 10px rgba(225, 225, 225, 0.3);
 }
 
 .more-info {
-    background-color: #ddd;
     grid-column: 2;
     grid-row: 3 / 5;
     width: 100%;
     height: 100%;
+    border: 2px solid rgba(225, 225, 225, 0.45);
     border-radius: 10px;
+    box-shadow: inset 10px 10px 23px rgba(255, 255, 255, 0.35),
+                inset -10px -12px 23px rgba(225, 225, 225, 0.35);
 }
 
 .remove-item {
@@ -310,13 +408,62 @@ nav {
 }
 
 @media (max-width: 1100px) and (min-width: 800px) {
+    #logo {
+        font-size: 28px;
+    }
+
+    #nav-right ul li {
+        margin: 0px 3px;
+    }
+
     .item {
+        margin: 25px 15%;
         grid-template-columns: 1fr 200px;
     }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 800px) and (min-width: 650px) {
+    #logo-container {
+        width: 50%;
+    }
+    
+    #logo {
+        font-size: 28px;
+    }
+
+    #enter-user {
+        width: 50%;
+    }
+
+    #nav-right {
+        display: none;
+    }
+
     .item {
+        margin: 25px 10%;
+        grid-template-columns: 1fr 200px;
+    }
+}
+
+@media (max-width: 650px) {
+    #logo-container {
+        width: 50%;
+    }
+
+    #logo {
+        font-size: 28px;
+    }
+
+    #enter-user {
+        width: 45%;
+    }
+
+    #nav-right {
+        display: none;
+    }
+
+    .item {
+        margin: 25px 10%;
         grid-template-columns: 1fr;
     }
 
@@ -342,14 +489,14 @@ nav {
 }
 
 #bg-blur {
-    display: none; /* display: block | when #add-item-button is clicked*/
+    display: none; /* display: block | when #add-item-button is clicked */
     position: absolute;
     top: 0px;
     right: 0px;
     bottom: 0px;
     left: 0px;
     background-color: #000;
-    opacity: 0.15;
+    opacity: 0.25;
     z-index: 999;
 }
 

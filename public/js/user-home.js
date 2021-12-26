@@ -30,67 +30,14 @@ let loadAnimation = document.querySelector('#load-animation');
 urlFormElement.addEventListener('submit', () => {
     urlForm.style.display = 'none';
     loadAnimation.style.display = 'block';
-    //let currentPrice = scraper.getData(url);
-    //currentPriceElement.innerText = currentPrice;
-    /*scraper.getData(url)
-        .then((price) => {
-            currentPriceElement.innerText = currentPrice;
-        });*/
 });
 
-
-/*
-// Draws price graphs for each item
-let max_items = 3; // Max number of itmes able to track at once
-window.onload = function() {
-    for (let i = 0; i < max_items; i++) {
-        let chart = document.querySelector('#chart' + i).getContext('2d');
-        if (!chart) {
-            break;
-        }
-        let lineChart = new Chart(chart, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Price',
-                    data: [1, 5, 1, 2, 4, 7]
-                }]
-            },
-            options: { }
-        });
-    }
-}
-*/
-/*
-<script>
-        let max_items = 3; // Max number of itmes able to track at once
-        window.onload = function() {
-            for (let i = 0; i < max_items; i++) {
-                let chart = document.querySelector('#chart' + i).getContext('2d');
-                if (!chart) {
-                    break;
-                }
-                let lineChart = new Chart(chart, {
-                    type: 'line',
-                    data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                        datasets: [{
-                            label: 'Price',
-                            data: [1, 5, 1, 2, 4, 7]
-                        }]
-                    },
-                    options: { }
-                });
-            }
-        }
-    </script>
-*/
-
+// Create item price charts and add to website
 window.onload = function() {
     let chartNum = 0;
     let chart = document.querySelector('#chart' + chartNum);
     while (chart) {
+        // Reformat time data
         let times = chart.dataset.times;
         times = times.split(',');
         let fullTimes = times.map(time => {
@@ -110,11 +57,12 @@ window.onload = function() {
             return month + '/' + day;
         });
     
+        // Reformat price data
         let prices = chart.dataset.prices;
         prices = prices.split(',');
         prices = prices.map(price => parseFloat(price));
     
-    
+        // Add chart to website and set display options
         let priceChart = new Chart(chart, {
             type: 'line',
             data: {
@@ -129,19 +77,13 @@ window.onload = function() {
                         'rgba(255,99,132,1)',
                         'rgba(54, 162, 235, 1)'
                     ],
-                    borderWidth: 1
+                    borderWidth: 1,
+                    lineTension: 0
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-            /*    scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                        }
-                    }]
-                },                  */
                 title: {
                     display: true,
                     text: 'Price Over Time',
@@ -185,17 +127,3 @@ window.onload = function() {
     }
     chartNum = 0;
 }
-
-/*
-title: function(tooltipItem, data) {
-    return data['labels'][tooltipItem[0]['index']];
-  },
-  label: function(tooltipItem, data) {
-    return data['datasets'][0]['data'][tooltipItem['index']];
-  },
-  afterLabel: function(tooltipItem, data) {
-    var dataset = data['datasets'][0];
-    var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
-    return '(' + percent + '%)';
-  }
-  */

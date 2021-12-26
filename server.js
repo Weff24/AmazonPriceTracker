@@ -1,36 +1,25 @@
 const http = require('http');
-const fs = require('fs');
 const express = require('express');
 const scraper = require('./scraper');
 const mongoClient = require('mongodb').MongoClient;
 const objectId = require('mongodb').ObjectId;
-const assert = require('assert');
-const res = require('express/lib/response');
-//////////////////////////////////////////////////const { report } = require('process');
 
 const app = express();
 
 // Enable server to locate static resources from given root directory
 app.use(express.static('public'));
 
-//////////////////////////////////////////////////////////////////////////////////////
 app.set('view engine', 'ejs');
 
 //app.use(express.json());       // to support JSON-encoded bodies
 // Enable server to read URL-encoded bodies 
 app.use(express.urlencoded({extended: false}));
 
-
-//let prices = [];
-//let allData = [];
 let uri = 'mongodb://localhost:27017';
 
 // Server receives requests to access the page and then loads the page
-app.get('/', (req, res) => {
-    res.render('home');
-    
-    //response.send(await fs.promises.readFile('./user-home.html', 'utf8'));
-    //response.render('user-home', {/*currentPrices: prices, names: names*/allData: allData});
+app.get('/:failed?', (req, res) => {
+    res.render('home', { failed: req.params.failed });
 });
 
 
@@ -39,9 +28,31 @@ app.post('/goto-user', (req, res) => {
     res.redirect('/user/' + req.body.username);
 });
 
+// Checks if the entered username already exists
+app.post('/create-user', (req, res) => {
+    let username = req.body.username;
+
+    mongoClient.connect(uri, (err, client) => {
+        if (err) throw err;
+        let db = client.db('users');
+        let cursor = db.collection(username).find();
+
+        // Create database collection for specified username
+        db.listCollections({ name: username })
+            .next((err, info) => {
+                client.close();
+                if (info) {
+                    res.redirect('/1');
+                } else {
+                    res.redirect('/user/' + username);
+                }
+            });
+    });
+});
+
 
 // Server loads all the data in the specified user's page
-app.get('/user/:username', (req, res) => {
+app.get('/user/:username/:failed?', (req, res) => {
     let username = req.params.username;
     let resultArray = [];
     mongoClient.connect(uri, (err, client) => {
@@ -63,7 +74,7 @@ app.get('/user/:username', (req, res) => {
             resultArray.push(doc);
         }, () => {
             client.close();
-            res.render('user-home', { allData: resultArray, name: username });
+            res.render('user-home', { allData: resultArray, name: username, failed: req.params.failed });
         });
     });
 })
@@ -74,24 +85,17 @@ app.post('/add-item-url', (req, res) => {
     let username = req.body.username;
 
     scraper.getData(req.body.url)
-        .then((/*{ price, name }*/ data) => {//////////////////////////////////////////////////////////////
-//            console.log(price);
-//            prices.unshift(price);
-//            console.log(prices);
+        .then(data => {
             data.maxPrice = data.price;
             data.minPrice = data.price;
-
             data.prices = [data.price];
             data.times = [data.time];
-//            data.prices = [{ x: data.time, y: data.price }]
 
-//            allData.push(data);
             let objId;
             // Add item to mongodb database
             mongoClient.connect(uri, (err, client) => {
                 if (err) throw err;
                 let db = client.db('users');
-                console.log(db.collection(username).countDocuments({}));////////////////////////////////////////////////////
                 db.collection(username).insertOne(data, (err, result) => {
                     if (err) throw err;
                     objId = result.insertedId;
@@ -99,31 +103,27 @@ app.post('/add-item-url', (req, res) => {
                 });
             });
 
-            // Update price every ................................................. hours
+            // Update price every 12 hours
             let intervalId = setInterval(() => {
                 mongoClient.connect(uri, (err, client) => {
                     if (err) throw err;
                     let db = client.db('users');
-                    if (db.collection(username).countDocuments({}) == 0) {
-                        clearInterval(intervalId);
-                    } else {
-                        updateCurrentPrice(req.body.url, objId, username);
-                    }
-                });
-                
-            }, 10000/*3600000*/);
-/*
-            mongoClient.connect(uri, (err, client) => {
-                if (err) throw err;
-                let db = client.db('users');
-                db.collection(username + '_update_timers').insertOne({ '_id': objId, 'intervalId': parseFloat(intervalId) },
-                                                                     (err, result) => {
-                    if (err) throw err;
-                    client.close();
-                });
-            });*/
-
+                    db.collection(username).countDocuments({ _id: objId })
+                        .then(count => {
+                            if (count == 0) {
+                                clearInterval(intervalId);
+                            } else {
+                                updateCurrentPrice(req.body.url, objId, username);
+                            }
+                        })
+                }); 
+            }, 43200000);
             res.redirect('/user/' + username);
+        })
+        .catch((err) => {
+            console.log('Error Detected: ' + err);
+//            alert('Unable to add item');
+            res.redirect('/user/' + username + '/1');
         });
 });
 
@@ -136,11 +136,11 @@ const updateCurrentPrice = function(url, objId, username) {
             mongoClient.connect(uri, (err, client) => {
                 if (err) throw err;
                 let db = client.db('users');
-                db.collection(username).updateOne({ '_id': objId }, 
-                                                  { $push: { 'prices': data.price, 'times': data.time }, 
-//                                                  { $push: { 'prices': { y: data.time, x: data.price } }, 
-                                                    $max: { 'maxPrice': data.price }, 
-                                                    $min: { 'minPrice': data.price } }, 
+                db.collection(username).updateOne({ _id: objId }, 
+                                                  { $push: { prices: data.price, times: data.time }, 
+                                                    $max: { maxPrice: data.price }, 
+                                                    $min: { minPrice: data.price },
+                                                    $set: { price: data.price } },
                                                   (err, result) => {
                     if (err) throw err;
                     client.close();
@@ -151,18 +151,14 @@ const updateCurrentPrice = function(url, objId, username) {
 
 
 app.post('/remove-item', (req, res) => {
-//    let index = req.body.num;
-//    allData.splice(index, 1);
     let username = req.body.username;
-
-
-
+    
     // Remove item from mongodb database
     mongoClient.connect(uri, (err, client) => {
         if (err) throw err;
         let db = client.db('users');
         clearInterval(req.body.id);
-        db.collection(username).deleteOne( {'_id': objectId(req.body.id) }, (err, result) => {
+        db.collection(username).deleteOne({ _id: objectId(req.body.id) }, (err, result) => {
             if (err) throw err;
             client.close();
         });

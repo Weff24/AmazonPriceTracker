@@ -10,29 +10,34 @@
 </head>
 <body>
     <nav id="navbar">
-        <a id="logo" href="add something here">Price Tracker</a>
+        <div id="logo-container">
+            <a id="logo" href="add something here">Price Tracker</a> <!-- ------------------     http://localhost:3000/     ----------------------- -->
+        </div>
         <div id="nav-mid">
-            <form id="search-form" action="add something here">
-                <input id="item-search" name="item-search" type="search"  placeholder="Enter Username">
+            <form id="search-form" action="/goto-user" method="POST">
+                <input id="enter-user" type="text" name="username" placeholder="Enter Username" required>
+                <button id="submit-user" type="submit">Go <span>&#x21E8</span></button>
             </form>
         </div>
         <div id="nav-right">
             <ul>
-                <li>User</li>
-                <li><a id="amazon-link" class="plain-link" href="https://www.amazon.com/" target="_blank">Amazon</a></li>
+                <li id='username'><%= name %></li>
+                <li><a id="amazon-link" class="hover-underline-animation" href="https://www.amazon.com/" target="_blank">Amazon</a></li>
             </ul>
         </div>
     </nav>
     <main class="main">
         <section id="page-intro">
-            <p id="welcome">Welcome, (User's Name)!</p>
+            <p id="welcome">Welcome, <%= name %>!</p>
             <p id="page-description">Items List</p>
         </section>
 
         <section id="add-item">
             <form id="add-item-form">
                 <button id="add-item-button" type="button">+ Add Item</button>
-                <!--<input id="add-item-button" type="button" value="Add Item">-->
+                <% if (failed) { %>
+                    <p id="error-message">Unable to Add Item!</p>
+                <% } %>
             </form>
             </script>
         </section>
@@ -45,13 +50,23 @@
             <form id="add-item-url-form" action="/add-item-url" method="POST">
                 <input id="enter-item-url" type="url" name="url" placeholder="Enter URL" required>
                 <input type="hidden" name="username" value="<%= name %>">
-                <button id="submit-item-url" type="submit">Submit</button>
+                <button id="submit-item-url" type="submit">Add</button>
             </form>
         </section>
 
         <%- include('item-list', { allData: allData, name: name }) %>
+        
+        <% if (Object.keys(allData).length == 0) { %>
+            <div id="empty-cart-container">
+                <img id="empty-cart-img" src="/images/empty_cart.png" alt="Empty Cart">
+                <p id="empty-cart-text">
+                    Items List is Empty!<br>
+                    Add an Item!
+                </p>
+            </div>
+        <% } %>
 
-        <div id="bg-blur">hi</div>
+        <div id="bg-blur"></div>
         <div id="load-animation">
             <div></div>
             <div></div>
