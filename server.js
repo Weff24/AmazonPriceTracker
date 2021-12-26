@@ -35,7 +35,6 @@ app.post('/create-user', (req, res) => {
     mongoClient.connect(uri, (err, client) => {
         if (err) throw err;
         let db = client.db('users');
-        let cursor = db.collection(username).find();
 
         // Create database collection for specified username
         db.listCollections({ name: username })
