@@ -4,6 +4,8 @@ const scraper = require('./scraper');
 const mongoClient = require('mongodb').MongoClient;
 const objectId = require('mongodb').ObjectId;
 
+require('dotenv').config();
+
 const app = express();
 
 // Enable server to locate static resources from given root directory
@@ -11,11 +13,10 @@ app.use(express.static('public'));
 
 app.set('view engine', 'ejs');
 
-//app.use(express.json());       // to support JSON-encoded bodies
 // Enable server to read URL-encoded bodies 
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
-let uri = 'mongodb+srv://mongo:il3DPKYjCHiCjn0K@cluster0.ztf3z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';    /*'mongodb://localhost:27017'*/
+const uri = process.env.MONGODB_URI;
 
 // Server receives requests to access the page and then loads the page
 app.get('/:failed?', (req, res) => {
@@ -79,7 +80,7 @@ app.get('/user/:username/:failed?', (req, res) => {
 })
 
 
-// Server receives initial data when user submits a url and ................................
+// Server receives initial data when user submits a url and adds it to database
 app.post('/add-item-url', (req, res) => {
     let username = req.body.username;
 
