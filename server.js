@@ -15,7 +15,7 @@ app.set('view engine', 'ejs');
 // Enable server to read URL-encoded bodies 
 app.use(express.urlencoded({extended: false}));
 
-let uri = 'mongodb://localhost:27017';
+let uri = 'mongodb+srv://mongo:il3DPKYjCHiCjn0K@cluster0.ztf3z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';    /*'mongodb://localhost:27017'*/
 
 // Server receives requests to access the page and then loads the page
 app.get('/:failed?', (req, res) => {
@@ -167,7 +167,7 @@ app.post('/remove-item', (req, res) => {
 });
 
 
-// Create and activate server
+// Create and activate server on local
 const server = http.createServer(app);
 const port = 3000;
 server.listen(process.env.PORT || port, 
