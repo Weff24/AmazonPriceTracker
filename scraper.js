@@ -5,7 +5,12 @@ async function getData(url) {
     let browser;
     try {
         // Launch puppeteer and web scrape desired data
-        browser = await puppeteer.launch();
+        browser = await puppeteer.launch({
+            args: [
+              '--no-sandbox',
+              '--disable-setuid-sandbox',
+            ]
+          });
         const page = await browser.newPage();
         await page.goto(url, {waitUntil: "domcontentloaded"});
         let priceString = await page.$eval('.a-offscreen', element => element.innerText);
