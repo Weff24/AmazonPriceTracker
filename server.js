@@ -173,29 +173,38 @@ server.listen(process.env.PORT || port,
 
     
 
+updateOnRestart();
+
 // Update prices each time Heroku dynos restart (24 hour intervals)
 // or website is opened.
 // Because free dynos on Heroku sleep after a set period of time.
-mongoClient.connect(uri, (err, client) => {
-    if (err) throw err;
-    let db = client.db('users');
-    db.listCollections({}, { nameOnly: true }).toArray((err, collInfos) => {
+async function updateOnRestart() {
+    mongoClient.connect(uri, (err, client) => {
         if (err) throw err;
-        collInfos.forEach((collInfo) => {
-            let username = collInfo.name;
-            db.collection(username).countDocuments()
-                .then(count => {
-                    if (count != 0) {
-                        let cursor = db.collection(username).find();
-                        cursor.forEach((doc, err) => {
-                            if (err) throw err;
-                            updateCurrentPrice(doc.url, objectId(doc._id), username);
-                        });
-                    }
+        let db = client.db('users');
+        let waitOffset = 0;
+        db.listCollections({}, { nameOnly: true }).toArray((err, collInfos) => {
+            if (err) throw err;
+            collInfos.forEach((collInfo) => {
+                let username = collInfo.name;
+                db.collection(username).countDocuments()
+                    .then(count => {
+                        if (count != 0) {
+                            let cursor = db.collection(username).find();
+                            cursor.forEach((doc, err) => {
+                                if (err) throw err;
+                                setTimeout(() => {
+                                    console.log('hi');
+                                    updateCurrentPrice(doc.url, objectId(doc._id), username);
+                                }, waitOffset * 5000);
+                                waitOffset++;
+                            });
+                        }
+                });
+            }, () => {
+                client.close();
             });
-        }, () => {
-            client.close();
         });
-    });
-});
+    });   
+};
 
