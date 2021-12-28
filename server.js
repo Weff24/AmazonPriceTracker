@@ -140,6 +140,9 @@ const updateCurrentPrice = function(url, objId, username) {
                     client.close();
                 });
             });
+        })
+        .catch((err) => {
+            console.log('Unable to update ' + username + ': ' + url);
         });
 };
 
