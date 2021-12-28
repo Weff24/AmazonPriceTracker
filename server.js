@@ -164,13 +164,13 @@ app.post('/remove-item', (req, res) => {
     res.redirect('/user/' + username);
 });
 
-/*
+
 // Create and activate local server
 const server = http.createServer(app);
 const port = 3000;
 server.listen(process.env.PORT || port, 
     () => console.log('Server is listening on port ' + port));
-*/
+
     
 
 // Update prices each time Heroku dynos restart (24 hour intervals)
