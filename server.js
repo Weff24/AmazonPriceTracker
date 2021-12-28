@@ -165,15 +165,7 @@ app.post('/remove-item', (req, res) => {
 });
 
 
-// Create and activate local server
-const server = http.createServer(app);
-const port = 3000;
-server.listen(process.env.PORT || port, 
-    () => console.log('Server is listening on port ' + port));
 
-    
-
-updateOnRestart();
 
 // Update prices each time Heroku dynos restart (24 hour intervals)
 // or website is opened.
@@ -194,7 +186,6 @@ async function updateOnRestart() {
                             cursor.forEach((doc, err) => {
                                 if (err) throw err;
                                 setTimeout(() => {
-                                    console.log('hi');
                                     updateCurrentPrice(doc.url, objectId(doc._id), username);
                                 }, waitOffset * 5000);
                                 waitOffset++;
@@ -208,3 +199,11 @@ async function updateOnRestart() {
     });   
 };
 
+
+// Create and activate local server
+const server = http.createServer(app);
+const port = 3000;
+server.listen(process.env.PORT || port, 
+    () => console.log('Server is listening on port ' + port));
+
+updateOnRestart();
