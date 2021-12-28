@@ -8,12 +8,11 @@ require('dotenv').config();
 
 const app = express();
 
-// Enable server to locate static resources from given root directory
+// Server can locate static resources from given root directory
 app.use(express.static('public'));
 
 app.set('view engine', 'ejs');
 
-// Enable server to read URL-encoded bodies 
 app.use(express.urlencoded({ extended: false }));
 
 const uri = process.env.MONGODB_URI;

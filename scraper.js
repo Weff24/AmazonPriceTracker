@@ -21,7 +21,7 @@ async function getData(url) {
         let timestamp = Date.now();
         let price = parseFloat(priceString.substring(1));
 
-        return { price: price, name: name, url: url , time: timestamp};
+        return { price: price, name: name, url: url, time: timestamp };
     } catch (e) {
         await browser.close();
     }

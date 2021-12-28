@@ -40,16 +40,6 @@ window.onload = function() {
         // Reformat time data
         let times = chart.dataset.times;
         times = times.split(',');
-        let fullTimes = times.map(time => {
-            let ts = new Date(parseFloat(time));
-            let year = ts.getFullYear().toString().substring(2);
-            let month = ts.getMonth() + 1;
-            let day = ts.getDate();
-            let hour = ts.getHours();
-            let mins = ts.getMinutes();
-            mins = (mins < 10 ? '0' : '') + mins;
-            return month + '/' + day + '/' + year + ' @ ' + hour + ':' + mins;
-        });
         times = times.map(time => {
             let ts = new Date(parseFloat(time));
             let month = ts.getMonth() + 1;
@@ -94,9 +84,6 @@ window.onload = function() {
                 },
                 tooltips: {
                     callbacks: {
-                        title: function(tooltipItem) {
-                            return fullTimes[times.indexOf(tooltipItem[0].xLabel)];
-                        },
                         label: function(tooltipItem) {
                             return '$' + tooltipItem.yLabel;
                         }
