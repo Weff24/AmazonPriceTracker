@@ -164,12 +164,13 @@ app.post('/remove-item', (req, res) => {
     res.redirect('/user/' + username);
 });
 
-
+/*
 // Create and activate local server
 const server = http.createServer(app);
 const port = 3000;
 server.listen(process.env.PORT || port, 
     () => console.log('Server is listening on port ' + port));
+*/
     
 
 // Update prices each time Heroku dynos restart (24 hour intervals)
@@ -188,11 +189,7 @@ mongoClient.connect(uri, (err, client) => {
                         let cursor = db.collection(username).find();
                         cursor.forEach((doc, err) => {
                             if (err) throw err;
-                            console.log(doc.url);
-                            console.log(username);
-                            console.log(doc._id);
-                            console.log(objectId(doc._id));
-                            updateCurrentPrice(doc.url, doc._id, username);
+                            updateCurrentPrice(doc.url, objectId(doc._id), username);
                         });
                     }
             });
