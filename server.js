@@ -172,7 +172,7 @@ server.listen(process.env.PORT || port,
     () => console.log('Server is listening on port ' + port));
 
     
-
+/*
 // Update prices each time Heroku dynos restart (24 hour intervals)
 // or website is opened.
 // Because free dynos on Heroku sleep after a set period of time.
@@ -198,3 +198,4 @@ mongoClient.connect(uri, (err, client) => {
         });
     });
 });
+*/
