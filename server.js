@@ -188,6 +188,10 @@ mongoClient.connect(uri, (err, client) => {
                         let cursor = db.collection(username).find();
                         cursor.forEach((doc, err) => {
                             if (err) throw err;
+                            console.log(doc.url);
+                            console.log(username);
+                            console.log(doc._id);
+                            console.log(objectId(doc._id));
                             updateCurrentPrice(doc.url, objectId(doc._id), username);
                         });
                     }
