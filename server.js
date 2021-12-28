@@ -178,10 +178,15 @@ mongoClient.connect(uri, (err, client) => {
         if (err) throw err;
         collInfos.forEach((collInfo) => {
             let username = collInfo.name;
-            let cursor = db.collection(username).find();
-            cursor.forEach((doc, err) => {
-                if (err) throw err;
-                updateCurrentPrice(doc.url, objectId(doc._id), username);
+            db.collection(username).countDocuments()
+                .then(count => {
+                    if (count != 0) {
+                        let cursor = db.collection(username).find();
+                        cursor.forEach((doc, err) => {
+                            if (err) throw err;
+                            updateCurrentPrice(doc.url, objectId(doc._id), username);
+                        });
+                    }
             });
         }, () => {
             client.close();
