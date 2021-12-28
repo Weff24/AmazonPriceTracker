@@ -192,7 +192,7 @@ mongoClient.connect(uri, (err, client) => {
                             console.log(username);
                             console.log(doc._id);
                             console.log(objectId(doc._id));
-                            updateCurrentPrice(doc.url, objectId(doc._id), username);
+                            updateCurrentPrice(doc.url, doc._id, username);
                         });
                     }
             });
