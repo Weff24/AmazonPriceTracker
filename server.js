@@ -23,7 +23,6 @@ app.get('/:failed?', (req, res) => {
     res.render('home', { failed: req.params.failed });
 });
 
-
 // Gets username and redirects to specified user's page
 app.post('/goto-user', (req, res) => {
     res.redirect('/user/' + req.body.username);
@@ -49,7 +48,6 @@ app.post('/create-user', (req, res) => {
             });
     });
 });
-
 
 // Server loads all the data in the specified user's page
 app.get('/user/:username/:failed?', (req, res) => {
@@ -79,7 +77,6 @@ app.get('/user/:username/:failed?', (req, res) => {
     });
 })
 
-
 // Server receives initial data when user submits a url and adds it to database
 app.post('/add-item-url', (req, res) => {
     let username = req.body.username;
@@ -91,8 +88,8 @@ app.post('/add-item-url', (req, res) => {
             data.prices = [data.price];
             data.times = [data.time];
 
-            let objId;
             // Add item to mongodb database
+            let objId;
             mongoClient.connect(uri, (err, client) => {
                 if (err) throw err;
                 let db = client.db('users');
@@ -115,18 +112,16 @@ app.post('/add-item-url', (req, res) => {
                             } else {
                                 updateCurrentPrice(req.body.url, objId, username);
                             }
-                        })
+                        });
                 }); 
             }, 43200000);
             res.redirect('/user/' + username);
         })
         .catch((err) => {
             console.log('Error Detected: ' + err);
-//            alert('Unable to add item');
             res.redirect('/user/' + username + '/1');
         });
 });
-
 
 // Updates the price data for a tracked item
 const updateCurrentPrice = function(url, objId, username) {
@@ -149,7 +144,7 @@ const updateCurrentPrice = function(url, objId, username) {
         });
 };
 
-
+// Server removes the specified item from the user's page
 app.post('/remove-item', (req, res) => {
     let username = req.body.username;
     
@@ -167,9 +162,30 @@ app.post('/remove-item', (req, res) => {
 });
 
 
-// Create and activate server on local
+// Create and activate local server
 const server = http.createServer(app);
 const port = 3000;
 server.listen(process.env.PORT || port, 
     () => console.log('Server is listening on port ' + port));
     
+
+// Update prices each time Heroku dynos restart (24 hour intervals)
+// or website is opened.
+// Because free dynos on Heroku sleep after a set period of time.
+mongoClient.connect(uri, (err, client) => {
+    if (err) throw err;
+    let db = client.db('users');
+    db.listCollections({}, { nameOnly: true }).toArray((err, collInfos) => {
+        if (err) throw err;
+        collInfos.forEach((collInfo) => {
+            let username = collInfo.name;
+            let cursor = db.collection(username).find();
+            cursor.forEach((doc, err) => {
+                if (err) throw err;
+                updateCurrentPrice(doc.url, objectId(doc._id), username);
+            });
+        }, () => {
+            client.close();
+        });
+    });
+});
