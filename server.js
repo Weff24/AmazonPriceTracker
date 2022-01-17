@@ -10,12 +10,10 @@ const app = express();
 
 // Server can locate static resources from given root directory
 app.use(express.static('public'));
-
 app.set('view engine', 'ejs');
-
 app.use(express.urlencoded({ extended: false }));
-
 const uri = process.env.MONGODB_URI;
+
 
 // Server receives requests to access the page and then loads the page
 app.get('/:failed?', (req, res) => {
@@ -165,11 +163,8 @@ app.post('/remove-item', (req, res) => {
 });
 
 
-
-
-// Update prices each time Heroku dynos restart (24 hour intervals)
-// or website is opened.
-// Because free dynos on Heroku sleep after a set period of time.
+// Update prices each time server is restarted (24 hour intervals).
+// Use this method because free dynos on Heroku sleep/idle after a period of time.
 async function updateOnRestart() {
     mongoClient.connect(uri, (err, client) => {
         if (err) throw err;
@@ -206,4 +201,13 @@ const port = 3000;
 server.listen(process.env.PORT || port, 
     () => console.log('Server is listening on port ' + port));
 
-updateOnRestart();
+
+// Check current time
+const currTime = new Date();
+const currHour = currTime.getUTCHours();
+const currMinute = currTime.getUTCMinutes();
+// Update prices when server restarted between 7:50 AM and 8:10 AM (UTC)
+if ((currHour == 7 && currMinute >= 50) || (currHour == 8 && currMinute <= 10)) {
+    updateOnRestart();
+}
+    
